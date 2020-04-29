@@ -10,29 +10,22 @@ public class Grid : MonoBehaviour
 
     AstarNode[,] node;
 
-    public GameObject seeker;
-    public GameObject target;
-
     public LayerMask unwalkable;
 
     float nodeDiameter;
-    int totalNodes;
     int totalNodesX;
     int totalNodesY;
+    public int totalNodes;
 
-    Vector3 bottomLeft;
 
-    public List<AstarNode> path;
     // Start is called before the first frame update
     void Awake()
     {
-        path = new List<AstarNode>();
         nodeDiameter = nodeRadius * 2;
-        totalNodesX = Mathf.RoundToInt(gridSizeX / nodeDiameter);
-        totalNodesY = Mathf.RoundToInt(gridSizeY / nodeDiameter);
-        bottomLeft = transform.position - Vector3.right * gridSizeX / 2 - Vector3.forward * gridSizeY / 2;
+        totalNodesX = Mathf.Abs(Mathf.RoundToInt(gridSizeX / nodeDiameter));
+        totalNodesY = Mathf.Abs(Mathf.RoundToInt(gridSizeY / nodeDiameter));
 
-        node = new AstarNode[totalNodesX, totalNodesY];
+        totalNodes = totalNodesX * totalNodesY;
 
         CreateNodes();
     }
@@ -45,6 +38,8 @@ public class Grid : MonoBehaviour
 
     void CreateNodes()
     {
+        node = new AstarNode[totalNodesX, totalNodesY];
+        Vector3 bottomLeft = transform.position - Vector3.right * gridSizeX / 2 - Vector3.forward * gridSizeY / 2;
         int i = 0;
         for (int x = 0; x < totalNodesX; x++)
         {
@@ -108,29 +103,24 @@ public class Grid : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(transform.position, new Vector3(gridSizeX, 0, gridSizeY));
-   
-        for (int i = 0; i < totalNodesX; i++)
-        {
-            for (int y = 0; y < totalNodesY; y++)
-            {
-                if (node[i, y].walkable == true) 
-                {
-                    Gizmos.color = Color.blue;
-                }
-                else
-                {
-                    Gizmos.color = Color.red;
-                }
-
-                if (path != null && path.Contains(node[i, y]))
-                {
-                    Gizmos.color = Color.yellow;
-                }
-                Gizmos.DrawCube(node[i,y].worldPosition, Vector3.one * (nodeDiameter - .1f));
-            }
-        }
-    }
+ private void OnDrawGizmos()
+ {
+   Gizmos.DrawWireCube(transform.position, new Vector3(gridSizeX, 0, gridSizeY));
+  
+   for (int i = 0; i < totalNodesX; i++)
+   {
+       for (int y = 0; y < totalNodesY; y++)
+       {
+           if (node[i, y].walkable == true) 
+           {
+               Gizmos.color = Color.blue;
+           }
+           else
+           {
+               Gizmos.color = Color.red;
+           }
+           Gizmos.DrawCube(node[i,y].worldPosition, Vector3.one * (nodeDiameter - .1f));
+       }
+   }
+ }
 }

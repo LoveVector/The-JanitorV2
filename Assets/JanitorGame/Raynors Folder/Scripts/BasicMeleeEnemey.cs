@@ -11,14 +11,12 @@ public class BasicMeleeEnemey : EnemyAbstract
 
     List<Vector3> waypoints;
 
-    bool move = false;
+    bool check = false;
 
     bool deadForce;
     // Start is called before the first frame update
     void Start()
     {
-        waypoints = new List<Vector3>();
-
         enemyState = state.chasing;
 
         anim = GetComponent<Animator>();
@@ -28,11 +26,6 @@ public class BasicMeleeEnemey : EnemyAbstract
         deadForce = false;
 
         StartCoroutine("GetPlayerDirection");
-
-        if(player == null)
-        {
-            Debug.Log("player null");
-        }
     }
 
     // Update is called once per frame
@@ -68,7 +61,7 @@ public class BasicMeleeEnemey : EnemyAbstract
                 if (deadForce == false)
                 {
                     rb.AddForce(-hit.normal * 500);
-                    level.DeadEnemy();
+                    LevelManager.Instance.DeadEnemy();
                     deadForce = true;
                     Destroy(this.gameObject, 5f);
                 }
@@ -92,20 +85,21 @@ public class BasicMeleeEnemey : EnemyAbstract
 
     void Chasing()
     {
-        if (move == true)
+        if(check == true)
         {
-            if (waypoints != null)
-            {
-                transform.position = Vector3.MoveTowards(this.transform.position, waypoints[0], speed * Time.deltaTime);
-                transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
+            StartCoroutine("GetPlayerDirection");
+        }
+        if (waypoints != null)
+        {
+            transform.position = Vector3.MoveTowards(this.transform.position, waypoints[0], speed * Time.deltaTime);
+            transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
 
-                if (this.transform.position == waypoints[0])
+            if (this.transform.position == waypoints[0])
+            {
+                waypoints.RemoveAt(0);
+                if (waypoints.Count == 0)
                 {
-                    waypoints.RemoveAt(0);
-                    if (waypoints.Count == 0)
-                    {
-                        waypoints = Pathfinding.Instance.PathFind(this.transform.position, player.transform.position);
-                    }
+                    waypoints = Pathfinding.Instance.PathFind(this.transform.position, player.transform.position);
                 }
             }
         }
@@ -118,15 +112,16 @@ public class BasicMeleeEnemey : EnemyAbstract
             lastAttack = Time.time + attackRate;
             int attackType = Random.Range(0, 2);
             anim.SetFloat("AttackBlend", attackType);
+            Debug.Log("attack");
             anim.SetTrigger("Attack");
         }
     }
 
     IEnumerator GetPlayerDirection()
     {
-        yield return new WaitForSeconds(Random.Range(0.1f, 0.6f));
-        move = true;
-        waypoints = Pathfinding.Instance.PathFind(this.transform.position, player.transform.position);
-        StartCoroutine("GetPlayerDirection");
+        check = false;
+        yield return new WaitForSeconds(Random.Range(0.3f, 1f));
+        check = true;
+        waypoints = LevelManager.Instance.pathfinding.PathFind(this.transform.position, player.transform.position, LevelManager.Instance.grid);
     }
 }

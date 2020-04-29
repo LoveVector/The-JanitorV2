@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AstarNode 
+public class AstarNode : IHeapItem<AstarNode>
 {
     public bool walkable;
     public Vector3 worldPosition;
@@ -12,7 +12,7 @@ public class AstarNode
 
     public int xPos;
     public int yPos;
-
+    int heapIndex;
     public bool closed = false;
 
     public AstarNode parent;
@@ -30,5 +30,27 @@ public class AstarNode
         {
             return gCost + hCost;
         }
+    }
+
+    public int HeapIndex
+    {
+        get
+        {
+            return heapIndex;
+        }
+        set
+        {
+            heapIndex = value;
+        }
+    }
+
+    public int CompareTo(AstarNode nodeToCompare)
+    {
+        int compare = fCost.CompareTo(nodeToCompare.fCost);
+        if (compare == 0)
+        {
+            compare = hCost.CompareTo(nodeToCompare.hCost);
+        }
+        return -compare;
     }
 }

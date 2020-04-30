@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3778591675882258250}
   - component: {fileID: 7443544698854982579}
   - component: {fileID: 3221082551555637837}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: MeetingTable_Large
   m_TagString: Untagged
   m_Icon: {fileID: 0}

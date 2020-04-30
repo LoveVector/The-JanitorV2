@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7696357459613508607}
   - component: {fileID: -2417206655617470442}
   m_Layer: 0
-  m_Name: Tofu
+  m_Name: UpdatedTofu
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,11 +48,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  attackDamage: 0
+  attackDamage: 4
   bulletLayer: 0
   attackRate: 1
-  runSpeed: 0
-  lastAttack: 0
+  runSpeed: 2
+  lastAttack: 1
   speed: 3
   dead: 0
   anim: {fileID: 0}

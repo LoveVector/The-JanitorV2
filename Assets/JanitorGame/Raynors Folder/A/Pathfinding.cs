@@ -28,22 +28,13 @@ public class Pathfinding : MonoBehaviour
         found = false;
         startNode = grid.GetNodePoint(startPosition);
         endNode = grid.GetNodePoint(endPosition);
-        List<AstarNode> nodes = new List<AstarNode>();
+        Heap<AstarNode> nodes = new Heap<AstarNode>(grid.totalNodes);
         startNode.hCost = GetDistance(startNode, endNode);
         nodes.Add(startNode);
 
         while (nodes.Count > 0)
         {
-            currentNode = nodes[0];
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                if (nodes[i].fCost < currentNode.fCost || nodes[i].fCost == currentNode.fCost && nodes[i].hCost < currentNode.hCost)
-                {
-                    currentNode = nodes[i];
-                }
-            }
-
-            nodes.Remove(currentNode);
+            currentNode = nodes.RemoveFirst();
             currentNode.closed = true;
 
             if (currentNode == endNode)

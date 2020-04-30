@@ -20,14 +20,14 @@ public class Wave
 
     public bool spawnNext;
 
-    public void StartWave(Transform[] spawnPositions, LevelManager level)
+    public void StartWave(Transform[] spawnPositions)
     {
         int type = Random.Range(enemyTypes.Length - enemyTypes.Length, enemyTypes.Length);
         if(beginning == true)
         {
             for (int i = 0; i < firstSpawn; i++)
             {
-                level.Spawn(enemyTypes[type], spawnPositions[spawn]);
+                LevelManager.Instance.Spawn(enemyTypes[type], spawnPositions[spawn]);
                 enemiesSpawned++;
                 spawn++;
                 if(spawn == spawnPositions.Length)
@@ -46,7 +46,7 @@ public class Wave
         {
             for (int i = 0; i < spawnAmount; i++)
             {
-                level.Spawn(enemyTypes[type], spawnPositions[spawn]);
+                LevelManager.Instance.Spawn(enemyTypes[type], spawnPositions[spawn]);
                 enemiesSpawned++;
                 spawn++;
                 if (spawn == spawnPositions.Length)
@@ -65,7 +65,7 @@ public class Wave
         {
             if (waveVoice != null)
             {
-                level.currentVoice =  waveVoice;
+                LevelManager.Instance.currentVoice =  waveVoice;
             }
             end = true;
         }

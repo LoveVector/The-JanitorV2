@@ -39,7 +39,6 @@ public abstract class EnemyAbstract : MonoBehaviour
 
     public virtual void Damage(int damage)
     {
-        Debug.Log("Damaged");
         health -= damage;
     }
 }

@@ -21,6 +21,8 @@ public class ShotNew : GunsNew
         move = player.GetComponent<PlayerMovement>();
         enemyLayer = LayerMask.NameToLayer("Enemy");
         anim = GetComponent<Animator>();
+        ammoCap = GameManager.Instance.shottyAmmo;
+        beginningAmmo = 2;
         ammo = beginningAmmo;
     }
 
@@ -71,9 +73,17 @@ public class ShotNew : GunsNew
                     Debug.Log("haha");
                     if (hit.collider.gameObject.layer == enemyLayer)
                     {
-                        EnemyAbstract basic = hit.collider.gameObject.GetComponentInParent<EnemyAbstract>();
-                        basic.hit = hit;
-                        basic.Damage(damage);
+                        if (hit.collider.gameObject.GetComponentInParent<EnemyAbstract>() != null)
+                        {
+                            EnemyAbstract basic = hit.collider.gameObject.GetComponentInParent<EnemyAbstract>();
+                            basic.hit = hit;
+                            basic.Damage(damage);
+                        }
+                        else
+                        {
+                            BossGOAP basic = hit.collider.gameObject.GetComponentInParent<BossGOAP>();
+                            basic.Damage(damage);
+                        }
                     }
                     else if (hit.collider.gameObject.layer == barrelLayer)
                     {

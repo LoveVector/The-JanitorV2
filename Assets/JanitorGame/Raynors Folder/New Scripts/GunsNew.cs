@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class GunsNew : MonoBehaviour
 {
     public int damage;
-    protected int ammo;
+    public int ammo;
     public int ammoCap;
     public int beginningAmmo;
 

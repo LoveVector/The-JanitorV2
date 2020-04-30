@@ -279,4 +279,16 @@ public class PlayerMovement : MonoBehaviour
         weaponSelected = changedTo;
         ChangeWeapon();
     }
+
+    public void AmmoRefill(int amount, string weaponName)
+    {
+        if(weaponName == "shotgun")
+        {
+            weapons[2].GetComponent<GunsNew>().ammoCap += amount;
+        }
+        else if(weaponName == "ak")
+        {
+            weapons[1].GetComponent<GunsNew>().ammo += amount;
+        }
+    }
 }

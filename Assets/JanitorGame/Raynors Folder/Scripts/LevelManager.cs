@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using AStar;
 
 public class LevelManager : MonoBehaviour
 {
+    public static LevelManager Instance { get; private set; }
+
+    public bool isThereBegVoiceAct;
+
     public VoiceActing beginningVoice;
     public Text text;
     public VoiceActing currentVoice;
 
     public Wave[] waves;
-    Wave currentWave;
+    public Wave currentWave;
 
     public Transform[] spawnLocations;
 
@@ -19,22 +24,65 @@ public class LevelManager : MonoBehaviour
     float lastWaveEndTime = 0;
     public float waveRate;
 
+    [HideInInspector] public bool bossWave;
+
     AudioSource source;
 
+    public bool isThisBoss;
+
     public GameObject player;
+    public GameObject boss;
+
+    BossGOAP bossCode;
+
+    public AGrid grid;
+    public APathFinding pathfinding;
+
+    public float gridSizeX;
+    public float gridSizeY;
+    public float nodeRadius;
+
+    public Transform position;
+
+    public LayerMask unwalkable;
+
     // Start is called before the first frame update
     void Start()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         source = GetComponent<AudioSource>();
-        StartCoroutine("BeginningVoiceActing");
+        if (isThereBegVoiceAct)
+        {
+            StartCoroutine("BeginningVoiceActing");
+        }
         currentWave = waves[wavePoint];
+
+        bossWave = false;
+
+        if(boss != null)
+        {
+            bossCode = boss.GetComponent<BossGOAP>();
+        }
+
+        grid = new AGrid(this.transform, gridSizeX, gridSizeY, nodeRadius, unwalkable);
+        grid.CreateNodes();
+        pathfinding = new APathFinding();
     }
 
     // Update is called once per frame
     void Update()
     {
-        VoiceAct();
+        //VoiceAct();
         Waves();
+        grid.NodeChecks();
     }
 
     public void VoiceAct()
@@ -54,14 +102,33 @@ public class LevelManager : MonoBehaviour
 
     void Waves()
     {
-        if (Time.time >= lastWaveEndTime)
+        if (!isThisBoss)
         {
-            currentWave.StartWave(spawnLocations, this);
+            if (Time.time >= lastWaveEndTime)
+            {
+                currentWave.StartWave(spawnLocations);
+            }
         }
-        if(currentWave.end == true && wavePoint < waves.Length)
+        else if (bossWave == true && isThisBoss)
         {
-            currentWave = waves[wavePoint];
-            wavePoint++;
+            currentWave.StartWave(spawnLocations);
+        }
+
+        if(currentWave.end == true)
+        {
+            if (!isThisBoss && wavePoint < waves.Length)
+            {
+                currentWave = waves[wavePoint];
+                wavePoint++;
+            }
+            else if (boss != null)
+            {
+                int o = Random.Range(0, waves.Length);
+                currentWave = waves[o];
+                currentWave.end = false;
+                bossCode.StartCoroutine("CallBackup");
+                bossWave = false;
+            }
             lastWaveEndTime = Time.time + waveRate;
         }
     }
@@ -72,10 +139,12 @@ public class LevelManager : MonoBehaviour
         EnemyAbstract enemyCode = enemy1.GetComponent<EnemyAbstract>();
         enemyCode.player = player;
         enemyCode.level = this;
+        Debug.Log("spawned");
     }
 
     public void DeadEnemy()
     {
+        Debug.Log("here");
         currentWave.spawnNext = true;
         currentWave.enemiesKilled++;
     }
@@ -89,5 +158,10 @@ public class LevelManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         currentVoice = beginningVoice;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(transform.position, new Vector3(gridSizeX, 0, gridSizeY));
     }
 }

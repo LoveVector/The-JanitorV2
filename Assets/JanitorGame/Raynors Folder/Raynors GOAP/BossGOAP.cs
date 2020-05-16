@@ -106,11 +106,10 @@ public class BossGOAP : MonoBehaviour
                 transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
             }
 
-            if (lastHealedHealth - currentHealth >= 2500 && !worldState.states.Contains("lowHealth"))
+            if (lastHealedHealth - currentHealth >= 2500 && !worldState.states.Contains("lowHealth")) //Check whether its time to go to heal position
             {
                 damageTaken = 0;
                 lastHealedHealth = currentHealth;
-                Debug.Log("healtime");
                 selectedGoal = 2;
                 worldState.states.Clear();
                 worldState.states.Add("lowHealth");
@@ -156,7 +155,7 @@ public class BossGOAP : MonoBehaviour
 
             simPlan[cDepth] = cSimActions;
 
-            if (cDepth > minDepth)
+            if (cDepth > minDepth) // Bigger than previous plan thus inefficient
             {
                 continue;
             }
@@ -180,7 +179,7 @@ public class BossGOAP : MonoBehaviour
             {
                 for (int i = 0; i < actions.Count; i++)
                 {
-                    if(cSimState.CompareStates(actions[i].requiredStates) == 0 && cSimState.CompareStates(actions[i].outcomeStates) > 0)
+                    if(cSimState.CompareStates(actions[i].requiredStates) == 0 && cSimState.CompareStates(actions[i].outcomeStates) > 0) // has to be possible and has to cause something
                     {
                         StatesCollection newState = new StatesCollection(cSimState);
                         newState.AddStates(actions[i].outcomeStates);

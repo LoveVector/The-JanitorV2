@@ -15,25 +15,28 @@ public class VoiceActing
 
     public void DoIt(Text text, AudioSource source)
     {
-        if(i == voice.Length)
+        if (voice != null)
         {
-            finished = true;
-            text.text = " ";
-        }
-        if (finished == false)
-        {
-            if (newLineStart == true)
+            if (i == voice.Length)
             {
-                source.clip = voice[i];
-                lineEndTime = Time.time + voice[i].length + 0.2f;
-                newLineStart = false;
-                source.Play();
-                text.text = lines[i];
+                finished = true;
+                text.text = " ";
             }
-            if (Time.time >= lineEndTime)
+            if (finished == false)
             {
-                i++;
-                newLineStart = true;
+                if (newLineStart == true)
+                {
+                    source.clip = voice[i];
+                    lineEndTime = Time.time + voice[i].length + 0.2f;
+                    newLineStart = false;
+                    source.Play();
+                    text.text = lines[i];
+                }
+                if (Time.time >= lineEndTime)
+                {
+                    i++;
+                    newLineStart = true;
+                }
             }
         }
     }

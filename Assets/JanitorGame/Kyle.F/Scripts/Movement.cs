@@ -55,6 +55,13 @@ public class Movement : MonoBehaviour
         }
 
         WeaponSwitch();
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            StartCoroutine(Melee());
+        }
+
+        Debug.Log(weaponsEnabled);
     }
 
     void FixedUpdate()
@@ -81,6 +88,15 @@ public class Movement : MonoBehaviour
         rb.velocity = movement * dashSp;
         yield return new WaitForSeconds(dashT);
         Debug.Log("Dashing");
+    }
+
+    IEnumerator Melee()
+    {
+        weaponsEnabled = false;
+        //animation here
+        Debug.Log("Hitting Enemy");
+        yield return new WaitForSeconds(2.0f);
+        weaponsEnabled = true;
     }
 
     void Move()

@@ -59,7 +59,7 @@ public class LevelManager : MonoBehaviour
         }
 
         source = GetComponent<AudioSource>();
-        if (isThereBegVoiceAct)
+        if (isThereBegVoiceAct) //if level does not have beginning voicing
         {
             StartCoroutine("BeginningVoiceActing");
         }
@@ -72,7 +72,9 @@ public class LevelManager : MonoBehaviour
             bossCode = boss.GetComponent<BossGOAP>();
         }
 
-        grid = new AGrid(this.transform, gridSizeX, gridSizeY, nodeRadius, unwalkable);
+        currentVoice = null;
+
+        grid = new AGrid(this.transform, gridSizeX, gridSizeY, nodeRadius, unwalkable);// set up astar dll
         grid.CreateNodes();
         pathfinding = new APathFinding();
     }
@@ -80,7 +82,11 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //VoiceAct();
+        if (currentVoice != null)
+        {
+            VoiceAct();
+        }
+
         Waves();
         grid.NodeChecks();
     }

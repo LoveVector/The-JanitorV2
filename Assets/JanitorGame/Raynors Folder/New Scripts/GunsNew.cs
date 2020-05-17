@@ -39,12 +39,13 @@ public abstract class GunsNew : MonoBehaviour
 
     protected Vector3 startPoint;
 
+    public AudioSource audioo;
+
     public virtual void Fire()
     {
         startPoint = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
 
         Debug.DrawRay(startPoint, cam.transform.forward, Color.red);
-
         if (Input.GetMouseButtonDown(0) && Time.time >= lastShot && ammo > 0)
         {
             ammo--;

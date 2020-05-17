@@ -14,6 +14,7 @@ public class PistolNew : GunsNew
         enemyLayer = LayerMask.NameToLayer("Enemy");
         anim = GetComponent<Animator>();
         ammo = beginningAmmo;
+        audioo = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -27,6 +28,8 @@ public class PistolNew : GunsNew
             Reload();
         }
         Fire();
+
+        LevelManager.Instance.ammoText.text = "" + ammo;
     }
 
     public override void Reload()
@@ -39,6 +42,7 @@ public class PistolNew : GunsNew
     {
         if (Input.GetMouseButtonDown(0) && Time.time >= lastShot && ammo > 0 && !isReloading && !isHolster & !isDraw && !move.sprint)
         {
+            audioo.Play();
             rec.AddRecoil(0, 0.5f);
             startPoint = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
 

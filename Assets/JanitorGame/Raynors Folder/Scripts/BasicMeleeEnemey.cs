@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BasicMeleeEnemey : EnemyAbstract
 {
+    public GameObject weapon;
     enum state { chasing, attacking, dead}
     state enemyState;
 
@@ -14,6 +16,10 @@ public class BasicMeleeEnemey : EnemyAbstract
     bool check = false;
 
     bool deadForce;
+
+    NavMeshAgent agent;
+
+    public bool useAstar;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +31,15 @@ public class BasicMeleeEnemey : EnemyAbstract
 
         deadForce = false;
 
-        StartCoroutine("GetPlayerDirection");
+        if (useAstar == false)
+        {
+            agent = GetComponent<NavMeshAgent>();
+            agent.destination = player.transform.position;
+        }
+        else
+        {
+            StartCoroutine("GetPlayerDirection");
+        }
     }
 
     // Update is called once per frame
@@ -63,11 +77,21 @@ public class BasicMeleeEnemey : EnemyAbstract
                     rb.AddForce(-hit.normal * 500);
                     LevelManager.Instance.DeadEnemy();
                     deadForce = true;
+                    if (!useAstar)
+                    {
+                        agent.velocity = Vector3.zero;
+                    }
                     Destroy(this.gameObject, 5f);
+                    Destroy(weapon);
                 }
                 break;
             default:
                 break;
+        }
+
+        if (useAstar == false)
+        {
+            agent.SetDestination(player.transform.position);
         }
     }
 
@@ -85,23 +109,31 @@ public class BasicMeleeEnemey : EnemyAbstract
 
     void Chasing()
     {
-        if(check == true)
+        if (useAstar)
         {
-            StartCoroutine("GetPlayerDirection");
-        }
-        if (waypoints != null)
-        {
-            transform.position = Vector3.MoveTowards(this.transform.position, waypoints[0], speed * Time.deltaTime);
-            transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
-
-            if (this.transform.position == waypoints[0])
+            if (check == true)
             {
-                waypoints.RemoveAt(0);
-                if (waypoints.Count == 0)
+                StartCoroutine("GetPlayerDirection");
+            }
+            if (waypoints != null)
+            {
+                transform.position = Vector3.MoveTowards(this.transform.position, waypoints[0], speed * Time.deltaTime);
+                transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
+
+                if (this.transform.position == waypoints[0])
                 {
-                    waypoints = Pathfinding.Instance.PathFind(this.transform.position, player.transform.position);
+                    waypoints.RemoveAt(0);
+                    if (waypoints.Count == 0)
+                    {
+                        waypoints = LevelManager.Instance.pathfinding.PathFind(this.transform.position, player.transform.position, LevelManager.Instance.grid);
+                    }
                 }
             }
+        }
+        else
+        {
+            agent.isStopped = false;
+            transform.LookAt(new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z));
         }
     }
 
@@ -115,6 +147,7 @@ public class BasicMeleeEnemey : EnemyAbstract
             Debug.Log("attack");
             anim.SetTrigger("Attack");
         }
+        agent.isStopped = true;
     }
 
     IEnumerator GetPlayerDirection()

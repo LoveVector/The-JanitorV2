@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AI;
 
 public class BossGOAP : MonoBehaviour
 {
@@ -49,6 +50,9 @@ public class BossGOAP : MonoBehaviour
     [HideInInspector] public bool coroutineDone;
     [HideInInspector] public bool lookAtPlayer;
     public float currentHealth;
+
+    public bool useAStar;
+    public NavMeshAgent agent;
     // Start is called before the first frame update
     void Start()
     {
@@ -60,7 +64,11 @@ public class BossGOAP : MonoBehaviour
 
         dead = false;
 
-        StartCoroutine("GetPlayerDirection");
+        if (useAStar)
+        {
+
+            StartCoroutine("GetPlayerDirection");
+        }
         StartCoroutine("CallBackup");
 
         anim = GetComponent<Animator>();
@@ -83,6 +91,8 @@ public class BossGOAP : MonoBehaviour
         StartCoroutine("CheckPlayerLocation");
 
         Plan();
+
+        agent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -257,6 +267,10 @@ public class BossGOAP : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         this.transform.position = position;
+        if(useAStar == false)
+        {
+            agent.destination = position;
+        }
         if (worldState.states.Contains("canMove"))
         {
             lastTimeFired = Time.time + fireRate;

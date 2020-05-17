@@ -21,9 +21,17 @@ public class ShotNew : GunsNew
         move = player.GetComponent<PlayerMovement>();
         enemyLayer = LayerMask.NameToLayer("Enemy");
         anim = GetComponent<Animator>();
-        ammoCap = GameManager.Instance.shottyAmmo;
+        if(LevelManager.Instance.currentScene != 1)
+        {
+            ammoCap = GameManager.Instance.shottyAmmo;
+        }
+        else
+        {
+            ammoCap = 5;
+        }
         beginningAmmo = 2;
         ammo = beginningAmmo;
+        audioo = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -38,12 +46,16 @@ public class ShotNew : GunsNew
         {
             Reload();
         }
+
+        LevelManager.Instance.ammoText.text = ammo + " / " + ammoCap;
+        LevelManager.Instance.shottyAmmo = ammoCap;
     }
 
     public override void Fire()
     {
         if (Input.GetMouseButtonDown(0) && Time.time >= lastShot && ammo > 0 && !isReloading && !isHolster & !isDraw && !move.sprint)
         {
+            audioo.Play();
             lastShot = Time.time + fireRate;
             rec.AddRecoil(0, 2);
             startPoint = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));

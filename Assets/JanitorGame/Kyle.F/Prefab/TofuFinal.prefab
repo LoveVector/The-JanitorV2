@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1007172104555163480}
   - component: {fileID: 103002306642958628}
   - component: {fileID: 3879674069451983565}
+  - component: {fileID: 2497942361297235924}
   m_Layer: 0
   m_Name: TofuFinal
   m_TagString: Enemy
@@ -54,21 +55,15 @@ MonoBehaviour:
   attackRate: 1
   runSpeed: 3
   lastAttack: 1
-  MAX_VELOCITY: 3
-  MAX_FORCE: 5.4
-  desired: {x: 0, y: 0, z: 0}
-  steering: {x: 0, y: 0, z: 0}
-  velocity: {x: 0, y: 0, z: 0}
   speed: 1.23
   dead: 0
   anim: {fileID: 0}
   player: {fileID: 0}
   level: {fileID: 0}
   rb: {fileID: 0}
-  neighbors: []
-  targetposition: {x: 0, y: 0, z: 0}
+  weapon: {fileID: 8994474271736870176}
   model: {fileID: 7445801406504407642}
-  leader: 0
+  useAstar: 0
 --- !u!54 &1007172104555163480
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -96,8 +91,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.46416616, z: 0.5462099}
-  m_Center: {x: 0, y: -0.881546, z: -0.0037032664}
+  m_Size: {x: 1, y: 1.0076499, z: 0.5462099}
+  m_Center: {x: -1.4030704e-11, y: -1.1532905, z: -0.0037032664}
 --- !u!95 &3879674069451983565
 Animator:
   serializedVersion: 3
@@ -117,6 +112,28 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!195 &2497942361297235924
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7445801406231588148}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &7445801406504407642
 GameObject:
   m_ObjectHideFlags: 0

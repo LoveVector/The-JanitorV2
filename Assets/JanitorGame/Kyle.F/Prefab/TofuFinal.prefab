@@ -53,7 +53,7 @@ MonoBehaviour:
   attackDamage: 5
   bulletLayer: 0
   attackRate: 1
-  runSpeed: 3
+  runSpeed: 2
   lastAttack: 1
   speed: 1.23
   dead: 0

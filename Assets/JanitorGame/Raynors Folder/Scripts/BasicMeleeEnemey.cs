@@ -19,6 +19,8 @@ public class BasicMeleeEnemey : EnemyAbstract
 
     NavMeshAgent agent;
 
+    PlayerHealth pHealth;
+
     public bool useAstar;
     // Start is called before the first frame update
     void Start()
@@ -30,6 +32,8 @@ public class BasicMeleeEnemey : EnemyAbstract
         rb = model.GetComponent<Rigidbody>();
 
         deadForce = false;
+
+        pHealth = FindObjectOfType<PlayerHealth>();
 
         if (useAstar == false)
         {
@@ -146,6 +150,7 @@ public class BasicMeleeEnemey : EnemyAbstract
             anim.SetFloat("AttackBlend", attackType);
             Debug.Log("attack");
             anim.SetTrigger("Attack");
+            pHealth.playerHealth -= attackDamage;
         }
         agent.isStopped = true;
     }

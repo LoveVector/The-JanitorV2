@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using TMPro;
 
 public static class DefineLerp
@@ -14,17 +16,15 @@ public static class DefineLerp
 }
 public class MainMenuCamera : MonoBehaviour
 {
-    //public Transform playCamera1;
-    //public Transform playCamera2;
     public Transform[] cameraOptions;
-    public TextMeshPro[] menuTexts;
+    public TextMeshProUGUI[] menuTexts;
     public float transitionSpeed;
-    private Transform currentView;
-    TextMeshPro currentText;
-    [SerializeField]
-    int viewIndex = 0;
+    public Transform currentView;
+    TextMeshProUGUI currentText;
+    public int viewIndex = 0;
     [SerializeField]
     int colorIndex = 0;
+
 
     void Start()
     {
@@ -50,14 +50,16 @@ public class MainMenuCamera : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            if(viewIndex < cameraOptions.Length - 1)
+            if(viewIndex <= cameraOptions.Length - 3)
             {
                 menuTexts[colorIndex].color = Color.white;
-                colorIndex++;
                 viewIndex++;
+                colorIndex++;
             }
         }
 
+        Debug.Log(viewIndex);
+        Debug.Log(colorIndex);
         menuTexts[colorIndex].color = Color.red;
     }
 

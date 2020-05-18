@@ -10,7 +10,10 @@ public class MoveToPlayerAction : ActionGoap
         {
             if(boss.check == false)
             {
-                boss.StartCoroutine("GetPlayerDirection");
+                if (boss.useAStar)
+                {
+                    boss.StartCoroutine("GetPlayerDirection");
+                }
             }
                 boss.anim.SetFloat("speed", 1);
             
@@ -25,15 +28,22 @@ public class MoveToPlayerAction : ActionGoap
                     boss.selectedLocation++;
                 }
             }
-            if (boss.waypoints != null && boss.waypoints.Count != 0)
+            if (boss.useAStar)
             {
-                transform.position = Vector3.MoveTowards(boss.transform.position, boss.waypoints[0], boss.speed * Time.deltaTime);
-                transform.LookAt(new Vector3(boss.waypoints[0].x, transform.position.y, boss.waypoints[0].z));
-
-                if (this.transform.position == boss.waypoints[0])
+                if (boss.waypoints != null && boss.waypoints.Count != 0)
                 {
-                    boss.waypoints.RemoveAt(0);
+                    transform.position = Vector3.MoveTowards(boss.transform.position, boss.waypoints[0], boss.speed * Time.deltaTime);
+                    transform.LookAt(new Vector3(boss.waypoints[0].x, transform.position.y, boss.waypoints[0].z));
+
+                    if (this.transform.position == boss.waypoints[0])
+                    {
+                        boss.waypoints.RemoveAt(0);
+                    }
                 }
+            }
+            else
+            {
+                boss.agent.destination = boss.allWalkLocations[boss.selectedPath][boss.selectedLocation].position;
             }
             return false;
         }

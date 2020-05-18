@@ -11,10 +11,18 @@ public class AKscript : GunsNew
     {
         barrelLayer = LayerMask.NameToLayer("Barrel");
         rec = player.GetComponent<CameraLook>();
+        audioo = GetComponent<AudioSource>();
         move = player.GetComponent<PlayerMovement>();
         enemyLayer = LayerMask.NameToLayer("Enemy");
         anim = GetComponent<Animator>();
-        ammo = GameManager.Instance.akAmmo;
+        if (LevelManager.Instance.currentScene != 1)
+        {
+            ammo = GameManager.Instance.akAmmo;
+        }
+        else
+        {
+            ammo = 200;
+        }
     }
 
     // Update is called once per frame
@@ -24,12 +32,15 @@ public class AKscript : GunsNew
         Movement();
         AnimationCheck();
         Fire();
+        LevelManager.Instance.ammoText.text = "" + ammo;
+        LevelManager.Instance.ak = ammo;
     }
 
     public override void Fire()
     {
         if (Input.GetMouseButton(0) && Time.time >= lastShot && ammo > 0 && !isReloading && !isHolster & !isDraw && !move.sprint)
         {
+            audioo.Play();
             rec.AddRecoil(Random.Range(-1, 2)/ 2f, Random.Range(0, 3)/ 2f);
 
             startPoint = cam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));

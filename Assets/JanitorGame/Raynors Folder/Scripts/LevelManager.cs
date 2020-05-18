@@ -8,6 +8,8 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
 
+    List<Vector3> waypoints;
+
     public bool isThereBegVoiceAct;
 
     public VoiceActing beginningVoice;
@@ -46,6 +48,15 @@ public class LevelManager : MonoBehaviour
 
     public LayerMask unwalkable;
 
+    public bool levelStart;
+    public bool levelEnd;
+
+    public int currentScene;
+
+    public Text ammoText;
+
+    public int shottyAmmo;
+    public int ak;
     // Start is called before the first frame update
     void Start()
     {
@@ -87,8 +98,11 @@ public class LevelManager : MonoBehaviour
             VoiceAct();
         }
 
-        Waves();
-        grid.NodeChecks();
+        if (levelStart == true)
+        {
+            Waves();
+            grid.NodeChecks();
+        }
     }
 
     public void VoiceAct()
@@ -122,10 +136,18 @@ public class LevelManager : MonoBehaviour
 
         if(currentWave.end == true)
         {
-            if (!isThisBoss && wavePoint < waves.Length)
+            if (!isThisBoss && wavePoint <= waves.Length)
             {
-                currentWave = waves[wavePoint];
-                wavePoint++;
+                if (wavePoint < waves.Length)
+                {
+                    currentWave = waves[wavePoint];
+                    wavePoint++;
+                }
+                else
+                {
+                    levelStart = false; 
+                    levelEnd = true;
+                }
             }
             else if (boss != null)
             {
@@ -141,7 +163,7 @@ public class LevelManager : MonoBehaviour
 
     public void Spawn(GameObject enemy,Transform spawnPosition)
     {
-        GameObject enemy1 = Instantiate(enemy, spawnPosition);
+        GameObject enemy1 = Instantiate(enemy, spawnPosition.transform.position, Quaternion.identity);
         EnemyAbstract enemyCode = enemy1.GetComponent<EnemyAbstract>();
         enemyCode.player = player;
         enemyCode.level = this;
@@ -169,5 +191,12 @@ public class LevelManager : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridSizeX, 0, gridSizeY));
+    }
+
+    public void Save()
+    {
+        GameManager.Instance.akAmmo = ak;
+        GameManager.Instance.shottyAmmo = shottyAmmo;
+        GameManager.Instance.Save();
     }
 }

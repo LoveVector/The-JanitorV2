@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/JanitorGame/Kyle Laihee Folder/Scenes/Level 2 Courtyard.unity
     guid: f1b853cdbfd97644f8b43c763d50aeb2
+  - enabled: 1
+    path: Assets/JanitorGame/Kyle Laihee Folder/Scenes/GameOver.unity
+    guid: 1a32ba9f1834c1746a08836f0e2ecad2
+  - enabled: 1
+    path: Assets/Harold.Design/Level 4 Boss.unity
+    guid: c0e11285c7d8a50419675d5f77592ecf
   m_configObjects: {}
